@@ -17,3 +17,13 @@ At the bottom of the plugin, you can edit the values
 1000 means the number of days you are selecting from the database
 
 5 means the number of links you are selecting.
+
+** Bonus! Want it as a public page?
+
+Save popularlinks.php
+
+Upload it to the /pages directory of your YOURLS installation.
+
+It will appear on your site as YOURLS-SITE/popularlinks
+
+As with the plugin, you can customize it by editing the values
