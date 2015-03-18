@@ -1,4 +1,4 @@
-# Yourls-Popular-Links-Plugin
+# Yourls Popular Links
 
 * The plugin only works for Yourls 1.7+. Download plugin15.php if you need it for Yourls 1.5-1 and below.
 
