@@ -44,7 +44,7 @@ if ($query) {
 	else  {
 		$created = $days. ' days ago';
 	}
-		$links 		.= '(' . $query_result->clicks . ')  - ' .$thisURLArray[host] .' - <a href="' . $base . '/' . $query_result->keyword .'" target="blank">';
+		$links 		.= '(' . $query_result->clicks . ')  - ' .$thisURLArray['host'] .' - <a href="' . $base . '/' . $query_result->keyword .'" target="blank">';
 	
 $links 		.= str_replace('www.', '', $query_result->title) . '</a> <a href=" ' . $base . '/' . $query_result->keyword .'+" target="blank"></a> Created ' . $created . '<br/>';
 	}
