@@ -19,11 +19,11 @@ function popularlinks_add_page() {
 function popularlinks_do_page() {
    $nonce = yourls_create_nonce('popular_links');
    echo '<style type="text/css">
-		    .popular-links {
+	    .popular-links {
                 border-color: #313131;
                 border-collapse: collapse;
-		    }
-		    .popular-links th {
+	    }
+	    .popular-links th {
                 font-size: 12px;
                 color: white;
             }
