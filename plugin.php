@@ -22,6 +22,7 @@ function popularlinks_do_page() {
 	    .popular-links {
                 border-color: #313131;
                 border-collapse: collapse;
+                width: auto;
 	    }
 	    .popular-links th {
                 font-size: 12px;
@@ -31,6 +32,7 @@ function popularlinks_do_page() {
                 padding: 8px;
                 border-color: #313131;
                 text-align: center;
+                word-break: break-all;
            }
             .popular-links thead {
                 background-color: #007bff;
