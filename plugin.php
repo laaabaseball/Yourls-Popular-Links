@@ -3,7 +3,7 @@
 Plugin Name: Popular Links
 Plugin URI: https://github.com/laaabaseball/Yourls-Popular-Links
 Description: Shows an admin page with the most popular links.
-Version: 3.0
+Version: 3.1
 Author: laaabaseball
 Author URI: http://kurtonium.com
 */
@@ -55,15 +55,28 @@ function popularlinks_do_page() {
         </style>
         <h2>Popular Links</h2>';
 
-   function show_top($numdays, $numlinks) {
+   function show_top($numdays,$numlinks) {
       global $ydb;
       $table_url = YOURLS_DB_TABLE_URL;
       $base      = YOURLS_SITE;
       $links     = '';
 
-      $query = $ydb->fetchObjects(
+      // Check if YOURLS_HOURS_OFFSET constant is defined and parse it
+      $offset_hours = defined('YOURLS_HOURS_OFFSET') ? (float)YOURLS_HOURS_OFFSET : 0;
+      $offset_seconds =$offset_hours * 3600;
+
+      // Prepare MySQL interval string for timestamp adjustment in query
+      if ($offset_hours != 0) {
+         $interval_op =$offset_hours >= 0 ? '+' : '-';
+         $abs_hours = abs($offset_hours);
+         $mysql_offset = "DATE_ADD(NOW(), INTERVAL {$offset_hours} HOUR)";
+      } else {
+         $mysql_offset = "NOW()";
+      }
+
+      $query =$ydb->fetchObjects(
          "SELECT `title`, `timestamp`, `url`, `keyword`, `clicks` FROM `$table_url`
-	                             WHERE `timestamp` >= SUBDATE(CURDATE(), $numdays)
+	                             WHERE `timestamp` >= SUBDATE({$mysql_offset},$numdays)
 	                             ORDER BY `clicks` DESC
 	                             LIMIT $numlinks"
       );
@@ -71,23 +84,24 @@ function popularlinks_do_page() {
 
          $maxClicks = max(array_column($query, 'clicks'));
 
-         foreach ($query as $query_result) {
+         foreach ($query as$query_result) {
             if ($query_result->clicks > 0) {
                $thisURLArray = parse_url(stripslashes($query_result->url));
-               $diff = abs(time() - strtotime($query_result->timestamp));
+               
+               // Calculate time difference including the offset adjustment
+               $now_with_offset = time() +$offset_seconds;
+               $diff = abs($now_with_offset - strtotime($query_result->timestamp));
                $days = floor($diff / (60 * 60 * 24));
-               if ($days < 1) {
-                  $created = 'today';
-               } else if ($days < 2) {
-                  $created = ' 1 day ago';
+               if ($days < 1) {$created = 'today';
+               } else if ($days < 2) {$created = ' 1 day ago';
                } else {
-                  $created = $days . ' days ago';
+                  $created =$days . ' days ago';
                }
 
                $percentage = ($query_result->clicks / $maxClicks) * 100 + 1;
 
                $links .=  '<tr>
-                              <td style="--percentage:' . $percentage . '%">' . $query_result->clicks . '</td>
+                              <td style="--percentage:' . $percentage . '%">' . $percentage_display . '' .$query_result->clicks . '</td>
                               <td>' . $created . '</td>
                               <td><a href="' . $base . '/' . $query_result->keyword . '" target="blank">' . $query_result->keyword . '</a></td>
                               <td>
